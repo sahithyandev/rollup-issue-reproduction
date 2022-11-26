@@ -1,19 +1,73 @@
-This repository contains the reproduction steps for [an issue for Rollup](https://github.com/rollup/rollup/issues/4726).
+This repository contains the reproduction steps for
+[an issue for Rollup](https://github.com/rollup/rollup/issues/4726).
+
+**THE ISSUE HAS BEEN FIXED NOW**  
+I am going to leave this as a resource in case someone experience the issue just like me.
+
+## The cause and the fix
+
+```javascript
+// rollup.config.js
+import typescript from "@rollup/plugin-typescript";
+
+export default function () {
+	return files.map((file) => {
+		return {
+			input: file,
+			output: {
+				dir: "dist-ts",
+				format: "cjs",
+			},
+			// here
+			plugins: [typescript()],
+		};
+	});
+}
+```
+
+The typescript function in the plugins array, was being called repeatedly for each file. Every time it gets called, it creates a typescript watcher. That was the reason the memory went up with each file and hit "Heap out of memory".
+
+To fix this,
+
+```javascript
+// rollup.config.js
+import typescript from "@rollup/plugin-typescript";
+
+// now it's called only once.
+const typescriptPluginInstance = typescript();
+
+export default function () {
+	return files.map((file) => {
+		return {
+			input: file,
+			output: {
+				dir: "dist-ts",
+				format: "cjs",
+			},
+			plugins: [typescriptPluginInstance],
+		};
+	});
+}
+```
+
+Now that the function call is moved outside the loops, the issue is fixed.
 
 ## Reproduction steps
 
 1. Clone this repository.
 2. Run `yarn install`
 3. Run `yarn build`
-	- The build won't succeed most of the time.
-	- If you have more memory allocated, it will succeed. Then, try adding 50 more source files.
-
+   - The build won't succeed most of the time.
+   - If you have more memory allocated, it will succeed. Then, try adding 50
+     more source files.
 
 ## The Error
 
-Even though the javascript files compile without an issue, the typescript files aren't.
+Even though the javascript files compile without an issue, the typescript files
+aren't.
 
-The build fails around the 60th typescript file on my machine. Of course, increased memory would fix it, but only temporarily.
+The build fails around the 60th typescript file on my machine. Of course,
+increased memory would fix it, but only temporarily.
 
 ```bash
 yarn run v1.22.19
@@ -239,7 +293,7 @@ FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memor
 12: 00007FF682F3DA41 v8::internal::SetupIsolateDelegate::SetupHeap+558193
 13: 00007FF682F10CB3 v8::internal::SetupIsolateDelegate::SetupHeap+374499
 14: 00007FF682EBEE10 v8::internal::SetupIsolateDelegate::SetupHeap+38976
-15: 00007FF603A17538 
+15: 00007FF603A17538
 error Command failed with exit code 134.
 info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
 ```
