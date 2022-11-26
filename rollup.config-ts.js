@@ -1,5 +1,7 @@
 import typescript from "@rollup/plugin-typescript";
 
+const typescriptPluginInstance = typescript();
+
 export default function () {
 	const files = [];
 	for (let i = 1; i <= 100; i++) {
@@ -16,7 +18,7 @@ export default function () {
 				dir: "dist-ts",
 				format: "cjs",
 			},
-			plugins: [typescript()],
+			plugins: [typescriptPluginInstance],
 		};
 	});
 }
