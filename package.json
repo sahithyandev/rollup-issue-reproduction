@@ -5,7 +5,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "node ./run-rollup.jsx"
+    "build": "node ./run-rollup.js"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^9.0.2",
