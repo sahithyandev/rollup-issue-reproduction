@@ -11,11 +11,13 @@ This repository contains the reproduction steps for [an issue for Rollup](https:
 
 ## The Error
 
-It fails around 60th file on my machine. Of course, increased memory would fix it, but only temporarily.
+Even though the javascript files compile without an issue, the typescript files aren't.
 
-```
+The build fails around the 60th typescript file on my machine. Of course, increased memory would fix it, but only temporarily.
+
+```bash
 yarn run v1.22.19
-$ rollup -c --configPlugin typescript
+$ rollup --config rollup.config-ts.js
 
 src/1.ts → dist...
 created dist in 329ms
