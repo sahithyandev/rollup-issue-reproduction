@@ -1,3 +1,14 @@
+This repository contains the reproduction steps for [an issue for Rollup](https://github.com/rollup/rollup/issues/4726).
+
+## Reproduction steps
+
+1. Clone this repository.
+2. Run `yarn install`
+3. Run `yarn build`
+	- The build won't succeed most of the time.
+	- If you have more memory allocated, it will succeed. Then, try adding 50 more source files.
+
+
 ## The Error
 
 It fails around 60th file on my machine. Of course, increased memory would fix it, but only temporarily.
