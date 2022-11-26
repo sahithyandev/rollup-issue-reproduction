@@ -1,0 +1,15 @@
+{
+  "name": "test-rollup-leak",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "rollup -c --configPlugin typescript"
+  },
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^9.0.2",
+    "rollup": "^3.4.0",
+    "tslib": "^2.4.1",
+    "typescript": "^4.9.3"
+  }
+}
